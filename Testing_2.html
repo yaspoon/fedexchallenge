@@ -120,7 +120,11 @@
 	<center>
 		<canvas id="gameCanvas" name="gameCanvas" width="800" height="600" style="border:1px solid #000000;"></canvas>
 	
-	<audio src="resources/audio/isengard.mp3" autoplay loop></audio>
+	<audio autoplay loop>
+		<source src="resources/audio/isengard.mp3">
+		<source src="resources/audio/isengard.ogg">
+		<embed src="resources/audio/isengard.mp3">
+	</audio>
 	<input type="text" id="blah" size="60">
 </body>
 </html>
