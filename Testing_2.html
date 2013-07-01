@@ -1,0 +1,126 @@
+<html>
+<head>
+	<!--<script type="text/javascript" src="//code.jquery.com/jquery-1.7.1.js"></script>-->
+	<script type="text/javascript" src="js/player.js"></script>
+	<script type="text/javascript" src="js/level.js"></script>
+	<script type="text/javascript" src="js/game.js"></script>
+	
+	<script type="text/javascript" >
+		var canvas;
+		var context;
+		var inGame = false;
+		var menuPos = 1;
+		
+		//Create a redraw Function
+		function redraw()
+		{
+			context.clearRect(0,0,800,600);
+			drawFrame();
+		}
+		
+		// Draw Frame Function
+		function drawFrame()
+		{
+			if(inGame)
+			{
+				gameDrawFrame();
+			}
+			else
+			{
+				drawMenu();
+			}
+		}
+		
+		function drawMenu()
+		{
+			//document.getElementById('blah').value = menuPos +", "+ inGame;
+			var ctx =  canvas.getContext("2d");
+			
+			// Create gradient
+			//var grd=ctx.createRadialGradient(75,50,5,90,60,100);
+			//grd.addColorStop(0,"red");
+			//grd.addColorStop(1,"white");
+
+			// Fill with gradient
+			ctx.fillStyle='#FF0000'//grd;
+			ctx.fillRect(150,90+(50*menuPos),500,40);
+			
+			ctx.fillStyle = '#000000';
+			ctx.font = "30px Arial";
+			ctx.fillText("Epic LOTRs Adventure Fighting Game", 150, 70);
+			ctx.fillText("START GAME", 300, 170);
+			
+		}
+		
+		// Keypresses
+		document.onkeydown = keydown;
+		document.onkeyup = keyup;
+		function keydown(e)
+		{
+			if(inGame)
+			{
+				gamekeydown(e);
+			}
+			else
+			{
+				e = e || e.which || e.keycode || window.event;
+				//alert(e.which);
+				if(e.which == '38')
+				{
+					if(menuPos > 1)
+					{
+						menuPos--;
+					}
+				}
+				else if(e.which == '40')
+				{
+					if(menuPos < 1)
+					{
+						menuPos++;
+					}
+				}
+				else if(e.which == '13')	// Enter Key
+				{
+					//alert("yolo");
+					switch(menuPos)
+					{
+						case 1:
+							inGame = true;
+							break;
+						default:
+							break;
+					}
+				}
+			}
+		}
+		function keyup(e)
+		{
+			if(inGame)
+			{
+				gamekeyup(e);
+			}
+			else
+			{
+				e = e || window.event;
+			}
+		}
+		
+		//Init Function
+		function init()
+		{
+			//alert("Hello");
+			canvas = document.getElementById("gameCanvas");
+			context = canvas.getContext("2d");
+			setInterval(redraw, 30);
+		}
+	</script>
+</head>
+
+<body onload="init()">
+	<center>
+		<canvas id="gameCanvas" name="gameCanvas" width="800" height="600" style="border:1px solid #000000;"></canvas>
+	
+	<audio src="resources/audio/isengard.mp3" autoplay loop></audio>
+	<input type="text" id="blah" size="60">
+</body>
+</html>
