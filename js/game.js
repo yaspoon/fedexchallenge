@@ -79,8 +79,24 @@ function gamekeydown(e)
 	}
 	else if (e.keyCode == '74')
 	{
-		//combat(weapon, //stuff);
-		//starInterval(combatTimer)
+		for(var ii = 0; ii < level.badguys.length; ii++)
+		{
+			if(spriteFacing == 1)
+			{
+				if(level.badguys[ii].x < player.combatRange && level.badguys[ii].x > player.x)
+				{
+					combat(weapon, level.badguys[ii])
+				}
+			}
+			else if(spriteFacing == -1)
+			{
+				if(level.badguys[ii].x < player.combatRange && level.badguys[ii].x < player.x)
+				{
+					combat(weapon, level.badguys[ii])
+				}
+			}
+		}
+		starInterval(combatTimer)
 	}
 
 }

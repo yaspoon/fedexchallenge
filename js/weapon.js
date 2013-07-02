@@ -1,42 +1,32 @@
-/*				COMBAT					*/
-function combat(weapon, object)
+//constructor/class FUCKING JS
+function weapon(type)
 {
-	weaponhit = false;
-
-	if(object.type == "enemy")
+	this.type = type
+	if(this.type == "Aragorn's Sword")
 	{
-		weaponCollisionCheck(weapon, object);
-		if(weaponhit)
-		{
-			enemy.hp - weapon.damage;
-		}
+		this.damage = 20;
+		this.attackSpeed = 5;
+		this.length = player.height*0.5;
 	}
-	else if(object.type == "level")
-	{
-		if(weaponhit)
-		{
-		}
-	}
-	weapon.updateStage();
+	this.endx = player.x+this.length;
+	this.start = player.x;
+	this.ylevel = player.y+(player.height/2)
 
 }
 
 
-function weaponCollisionCheck(weapon, object)
+function updateStage()
 {
-	for(var ii = 0; ii < 6; ii++)
+	if (weapon.stage < 5)
 	{
-		if(weapon.endx >= object.x && weapon.start <= object.x+object.width)
-		{
-			if(weapon.ylevel >= object.y && weapon.ylevel <= object.y+object.height)
-			{
-				weaponhit = true;
-				window.clearInterval(combatTimer);
-			}
-		}
+		weapon.stage += 1;
+	}
+	else
+	{
+		weapon.stage = 0;
+		window.clearInterval(combatTimer);
 	}
 }
 
-/*--------------------------------------------------*/
 
 

@@ -14,6 +14,8 @@ function player()
     this.facing = 0;
     this.jumpSpeed = 30;
     this.jumpLimit = 225;
+    this.weapon = new weapon("Aragorn's Sword");
+    this.combatRange = weapon.length;
 
     this.moving = false;
 	this.hitX = false;

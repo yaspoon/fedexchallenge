@@ -3,12 +3,12 @@ function combat(weapon, object)
 {
 	weaponhit = false;
 
-	if(object.type == "player")
+	if(object.type == "enemy")
 	{
 		weaponCollisionCheck(weapon, object);
 		if(weaponhit)
 		{
-			player.hp - weapon.damage;
+			enemy.hp - weapon.damage;
 		}
 	}
 	else if(object.type == "level")
@@ -26,9 +26,9 @@ function weaponCollisionCheck(weapon, object)
 {
 	for(var ii = 0; ii < 6; ii++)
 	{
-		if(weapon.x[ii] >= object.x && weapon.x[ii] <= object.x+object.width)
+		if(weapon.endx >= object.x && weapon.start <= object.x+object.width)
 		{
-			if(weapon.y[ii] >= object.y && weapon.y[ii] <= object.y+object.height)
+			if(weapon.ylevel >= object.y && weapon.ylevel <= object.y+object.height)
 			{
 				weaponhit = true;
 				window.clearInterval(combatTimer);
@@ -38,4 +38,6 @@ function weaponCollisionCheck(weapon, object)
 }
 
 /*--------------------------------------------------*/
+
+
 
