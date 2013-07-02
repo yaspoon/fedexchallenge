@@ -1,21 +1,42 @@
-//constructor/class FUCKING JS
-function weapon(damage, attackspeed)
+/*				COMBAT					*/
+function combat(weapon, object)
 {
-	this.damage = damage;
-	this.attackspeed = attackspeed;
-	this.type = "weapon";
-	this.stage = 0;
+	weaponhit = false;
+
+	if(object.type == "enemy")
+	{
+		weaponCollisionCheck(weapon, object);
+		if(weaponhit)
+		{
+			enemy.hp - weapon.damage;
+		}
+	}
+	else if(object.type == "level")
+	{
+		if(weaponhit)
+		{
+		}
+	}
+	weapon.updateStage();
+
 }
 
-function updateStage()
+
+function weaponCollisionCheck(weapon, object)
 {
-	if (weapon.stage < 5)
+	for(var ii = 0; ii < 6; ii++)
 	{
-		weapon.stage += 1;
-	}
-	else
-	{
-		weapon.stage = 0;
-		window.clearInterval(combatTimer);
+		if(weapon.endx >= object.x && weapon.start <= object.x+object.width)
+		{
+			if(weapon.ylevel >= object.y && weapon.ylevel <= object.y+object.height)
+			{
+				weaponhit = true;
+				window.clearInterval(combatTimer);
+			}
+		}
 	}
 }
+
+/*--------------------------------------------------*/
+
+
