@@ -1,12 +1,16 @@
 function level()
 {
 	this.maxLength = 1800;
-	this.blocks = [[0, 400, 2000, 1],[350, 269, 100, 1],[10, 320, 50, 1],[100, 200, 100, 1]];
+	this.blocks = [[350, 324, 70, 76],[0, 400, 2000, 1],[10, 320, 50, 1],[100, 200, 100, 1]];
 	this.gravity = 5;
 	this.type = 'level';
 	this.offset = 0;		// X offset used fot scrolling the map
 	this.startX = 5;
 	this.startY = 300;
+	
+	this.images = new Array();
+	this.images[0] = new Image();
+	this.images[0].src = 'resources/sprites/barrel.png';
 	
 	this.badguys = new Array();
 	this.badguys[0] = new enemy(600,100);
@@ -28,9 +32,11 @@ function level()
 	function drawLevel()
 	{
 		var ctx = canvas.getContext("2d");
-		ctx.fillStyle='#FF0000';
 		
-		for(var i = 0; i < this.blocks.length; i++)
+		ctx.drawImage(this.images[0], this.getX(0), this.getY(0), this.getLength(0), this.getHeight(0));
+		
+		ctx.fillStyle='#FF0000';
+		for(var i = 1; i < this.blocks.length; i++)
 		{
 			ctx.fillRect(this.blocks[i][0] + this.offset, this.blocks[i][1], this.blocks[i][2], this.blocks[i][3]);
 		}
