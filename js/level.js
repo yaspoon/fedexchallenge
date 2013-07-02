@@ -8,6 +8,22 @@ function level()
 	this.startX = 5;
 	this.startY = 300;
 	
+	this.badguys = new Array();
+	this.badguys[0] = new enemy(600,100);
+	
+	this.animate = animate;
+	function animate()
+	{
+		for(var i = 0; i < this.badguys.length; i++)
+		{
+			if(!this.badguys[i].aiON)
+			{
+				this.badguys[i].intelligence();
+			}
+			this.badguys[i].animate();
+		}
+	}
+	
 	this.drawLevel = drawLevel;
 	function drawLevel()
 	{
@@ -17,6 +33,11 @@ function level()
 		for(var i = 0; i < this.blocks.length; i++)
 		{
 			ctx.fillRect(this.blocks[i][0] + this.offset, this.blocks[i][1], this.blocks[i][2], this.blocks[i][3]);
+		}
+		
+		for(var i = 0; i < this.badguys.length; i++)
+		{
+			this.badguys[i].drawEnemy(this);
 		}
 	}
 	

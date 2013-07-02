@@ -1,18 +1,21 @@
-//constructor/class FUCKING JS
-function player()
+function enemy(xpos, ypos)
 {
-    //player attributes
-    this.x = 100;
-    this.y = 100;
-    this.height = 95;
+	this.hp = 100;
+	this.armor = 20;
+	//this.weapon = new weapon();
+	
+	this.x = xpos;
+	this.y = ypos;
+	this.height = 95;
     this.width = 71;
     this.speed = 5;
     this.facing = 0;
-    this.jumpSpeed = 30;
+    this.jumpSpeed = 15;
     this.jumpLimit = 225;
 
     this.moving = false;
 	this.hitX = false;
+	this.offset;
 
     this.frameCount = 0
 
@@ -49,11 +52,13 @@ function player()
 	this.jumpTimer;
 	this.jumpCount = 0;
 	this.moveTimer;
-
-    //player functions
-	this.drawPlayer = drawPlayer;
-	function drawPlayer(level)
+	this.aiTimer;
+	this.aiON = false;
+	
+	this.drawEnemy = drawEnemy;
+	function drawEnemy(level)
 	{
+		this.offset = level.offset;
 		var ctx = canvas.getContext('2d');
 		this.hitX = false;
 		var hitYT = false;
@@ -66,9 +71,9 @@ function player()
 			{
 				if(this.y + this.height + level.gravity >= level.getY(i))	// Going to hit Top
 				{
-					if(this.x + this.width >= level.getX(i))
+					if(this.getX() + this.width >= level.getX(i))
 					{
-						if(this.x <= level.getX(i) + level.getLength(i))
+						if(this.getX() <= level.getX(i) + level.getLength(i))
 						{
 							hitYT = true;
 							this.y = level.getY(i) - this.height;
@@ -79,16 +84,16 @@ function player()
 			}
 
 			// Collide Bottom
-			if(this.y >= level.getY(i) + level.getHeight(i)) // Below Bottom
+			/*if(this.y >= level.getY(i) + level.getHeight(i)) // Below Bottom
 			{
 				if(this.jumpCount > 0)
 				{
 					if((level.getY(i) + level.getHeight(i)) - this.y >= this.jumpSpeed)
 					{
-						if(this.x + this.width >= level.getX(i))
+						if(this.getX() + this.width >= level.getX(i))
 						{
 						//alert("yolo1");
-							if(this.x <= level.getX(i) + level.getLength(i))
+							if(this.getX() <= level.getX(i) + level.getLength(i))
 							{
 							//alert("yolo2");
 								//hitYT = true;
@@ -101,10 +106,10 @@ function player()
 					if(this.y - this.jumpSpeed <= level.getY(i) + level.getHeight(i))	// About to be above bottom
 					{
 
-						if(this.x + this.width >= level.getX(i))
+						if(this.getX() + this.width >= level.getX(i))
 						{
 						//alert("yolo1");
-							if(this.x <= level.getX(i) + level.getLength(i))
+							if(this.getX() <= level.getX(i) + level.getLength(i))
 							{
 							//alert("yolo2");
 								//hitYT = true;
@@ -116,12 +121,12 @@ function player()
 						}
 					}
 				}
-			}
+			}*/
 			
 			// Left Side Collision
-			if(this.x + this.width <= level.getX(i))	// Left of Object
+			if(this.getX() + this.width <= level.getX(i))	// Left of Object
 			{
-				if(this.x + this.width + this.facing*this.speed >= level.getX(i))
+				if(this.getX() + this.width + this.facing*this.speed >= level.getX(i))
 				{
 					if(this.y >= level.getY(i) || this.y + this.height >= level.getY(i) )
 					{
@@ -129,23 +134,23 @@ function player()
 						{
 							document.getElementById("blah").value = document.getElementById("blah").value + ", LevelX: " + level.getX(i);
 							this.hitX = true;
-							this.x = level.getX(i) - this.width - 1;
+							this.getX() = level.getX(i) - this.width - 1;
 						}
 					}
 				}
 			}
 
 			// Right Side Collision
-			if(this.x >= level.getX(i) + level.getLength(i))
+			if(this.getX() >= level.getX(i) + level.getLength(i))
 			{
-				if(this.x + this.facing*this.speed <= level.getX(i) + level.getLength(i))
+				if(this.getX() + this.facing*this.speed <= level.getX(i) + level.getLength(i))
 				{
 					if(this.y <= level.getY(i) + level.getHeight(i))
 					{
 						if(this.y + this.height >= level.getY(i))
 						{
 							this.hitX = true;
-							//this.x = level.getX(i) + level.getLength(i) + 0.001;
+							//this.getX() = level.getX(i) + level.getLength(i) + 0.001;
 						}
 					}
 				}
@@ -155,56 +160,25 @@ function player()
 		}
 		if(!hitYT)
 			this.y += level.gravity;
-		if(hitYB)
-		{
-			alert("yolo");
-			this.y += level.gravity;
-		}
+		
 		if(!this.hitX)
 		{
-			if((this.x + this.facing*this.speed >= 0) && (this.x + this.width + this.facing*this.speed <= 800))
+			if((this.x + this.facing*this.speed >= 0) && (this.x + this.width + this.facing*this.speed <= level.maxLength))
 			{
 				this.x += this.facing*this.speed;
 			}
 		}
         if(this.spriteFacing == 1)
         {
-            ctx.drawImage(this.spriteRight[this.currentSprite], this.x, this.y, this.width, this.height);
+            ctx.drawImage(this.spriteRight[this.currentSprite], this.getX(), this.y, this.width, this.height);
         }
         else
         {
-            ctx.drawImage(this.spriteLeft[this.currentSprite], this.x, this.y, this.width, this.height);
+            ctx.drawImage(this.spriteLeft[this.currentSprite], this.getX(), this.y, this.width, this.height);
         }
 	}
-
-	this.jump = jump;
-	function jump()
-	{
-		//alert(this.jumpCount);
-		this.jumpCount+=1;
-		if(this.jumpCount*this.jumpSpeed > this.jumpLimit)
-		{
-			window.clearInterval(this.jumpTimer);
-			this.jumpCount = -1;
-		}
-		else
-		{
-			this.y -= this.jumpSpeed;
-		}
-	}
-
-	this.jumpStart = jumpStart
-	function jumpStart()
-	{
-		if (this.jumpCount == 0)
-		{
-			this.jumpCount = 1;
-			var self = this;
-			this.jumpTimer = setInterval(function() {self.jump();}, 30);
-		}
-	}
-
-    this.animate = animate
+	
+	this.animate = animate
 	function animate()
 	{
         this.frameCount = this.frameCount + 1;
@@ -218,5 +192,56 @@ function player()
                 this.currentSprite = this.currentSprite % 5;
             }
         }
+	}
+	
+	this.intelligence = intelligence;
+	function intelligence(player)
+	{
+		this.aiON = true;
+		var ran = Math.floor(Math.random()*1000) + 1000;	// time allowed to move for
+		var ran2 = Math.floor(Math.random()*5);
+		if(ran2 == 0)	// Walk left
+		{
+			this.facing = -1;
+			this.spriteFacing = -1;
+			this.startWalking();
+		}
+		else if(ran2 == 1)
+		{
+			this.facing = 1;
+			this.spriteFacing = 1;
+			this.startWalking();
+		}
+		else
+		{
+			this.moving = false;
+			this.currentSprite = 0;
+			this.facing = 0;
+		}
+		//window.clearInterval(this.moveTimer);
+		var self = this;
+		//this.moveTimer = setInterval(function() {self.stopWalking;}, ran);
+		window.clearInterval(this.aiTimer);
+		this.aiTimer = setInterval(function() {self.intelligence();}, ran);
+	}
+	
+	this.startWalking = startWalking;
+	function startWalking()
+	{
+		this.moving = true;
+	}
+
+	this.stopWalking = stopWalking;
+	function stopWalking()
+	{
+		this.moving = false;
+        this.currentSprite = 0;
+		this.facing = 0;
+	}
+	
+	this.getX = getX;
+	function getX()
+	{
+		return this.x + this.offset;
 	}
 }
