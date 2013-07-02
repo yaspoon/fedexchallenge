@@ -1,6 +1,7 @@
 function enemy(xpos, ypos)
 {
-	this.hp = 100;
+	this.maxHP = 200;
+	this.hp = 150;
 	this.armor = 20;
 	//this.weapon = new weapon();
 	
@@ -84,7 +85,7 @@ function enemy(xpos, ypos)
 			}
 
 			// Collide Bottom
-			/*if(this.y >= level.getY(i) + level.getHeight(i)) // Below Bottom
+			if(this.y >= level.getY(i) + level.getHeight(i)) // Below Bottom
 			{
 				if(this.jumpCount > 0)
 				{
@@ -121,7 +122,7 @@ function enemy(xpos, ypos)
 						}
 					}
 				}
-			}*/
+			}
 			
 			// Left Side Collision
 			if(this.getX() + this.width <= level.getX(i))	// Left of Object
@@ -134,7 +135,7 @@ function enemy(xpos, ypos)
 						{
 							document.getElementById("blah").value = document.getElementById("blah").value + ", LevelX: " + level.getX(i);
 							this.hitX = true;
-							this.getX() = level.getX(i) - this.width - 1;
+							this.x = level.getX(i) - this.width - 1;
 						}
 					}
 				}
@@ -176,6 +177,52 @@ function enemy(xpos, ypos)
         {
             ctx.drawImage(this.spriteLeft[this.currentSprite], this.getX(), this.y, this.width, this.height);
         }
+		
+		// Draw Health Bar
+		ctx.fillStyle = "#000000";
+		ctx.strokeRect(this.getX(), this.y - 15, this.width, 10);
+		if((this.hp/this.maxHP) > 0.5)
+		{
+			ctx.fillStyle = "#00FF00";
+			ctx.fillRect(this.getX() + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
+		}
+		else if((this.hp/this.maxHP) > 0.2)
+		{
+			ctx.fillStyle = "#FF9900";
+			ctx.fillRect(this.getX() + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
+		}
+		else
+		{
+			ctx.fillStyle = "#FF0000";
+			ctx.fillRect(this.getX() + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
+		}
+	}
+	
+	this.jump = jump;
+	function jump()
+	{
+		//alert(this.jumpCount);
+		this.jumpCount+=1;
+		if(this.jumpCount*this.jumpSpeed > this.jumpLimit)
+		{
+			window.clearInterval(this.jumpTimer);
+			this.jumpCount = -1;
+		}
+		else
+		{
+			this.y -= this.jumpSpeed;
+		}
+	}
+
+	this.jumpStart = jumpStart
+	function jumpStart()
+	{
+		if (this.jumpCount == 0)
+		{
+			this.jumpCount = 1;
+			var self = this;
+			this.jumpTimer = setInterval(function() {self.jump();}, 30);
+		}
 	}
 	
 	this.animate = animate
@@ -212,6 +259,10 @@ function enemy(xpos, ypos)
 			this.spriteFacing = 1;
 			this.startWalking();
 		}
+		else if(ran2 == 2) // Jump
+		{
+			this.jumpStart();
+		}
 		else
 		{
 			this.moving = false;
@@ -223,6 +274,14 @@ function enemy(xpos, ypos)
 		//this.moveTimer = setInterval(function() {self.stopWalking;}, ran);
 		window.clearInterval(this.aiTimer);
 		this.aiTimer = setInterval(function() {self.intelligence();}, ran);
+	}
+	
+	this.stopJump = stopJump;
+	function stopJump()
+	{
+		this.jumpCount = -1;
+		this.currentSprite = 0;
+		window.clearInterval(this.jumpTimer);
 	}
 	
 	this.startWalking = startWalking;

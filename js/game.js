@@ -16,32 +16,45 @@ function gameDrawFrame()
 
 function scrolling()
 {
-	//document.getElementById("blah").value = player.x + ", offset: " + level.offset + ", length: " + (level.maxLength - 300) + ", hitX: " + player.hitX;
-	if(player.moving)
+	document.getElementById("blah").value = player.x + ", offset: " + level.offset + ", length: " + (level.maxLength - 300) + ", hitX: " + player.hitX;
+	/*if(player.moving)
 	{
-		if(player.facing == -1)	// Facing Left
-		{
+		//if(player.facing == -1)	// Facing Left
+		//{
 			if(player.x >= 250 && player.x <= 550)
 			{
 				if(!player.hitX)
 				{
-					if( (level.offset * -1) + 250 <= level.maxLength - 250 )
-						level.offset += player.speed;
+					if(level.offset >= 250 - level.maxLength)
+					{
+						level.offset -= (player.speed*player.facing);
+						//player.x += player.speed;
+					}
 				}
 			}
-		}
+			//else if(level.offset + player.speed <= 0)
+			//{
+			//	level.offset += player.speed;
+			//}
+		/*}
 		else if(player.facing == 1)	// Facing Right
 		{
-			if(player.x >= 250 && player.x <= 550)
+			if(player.x >= 250 && player.x + player.speed <= 550)
 			{
 				if(!player.hitX)
 				{
-					if( (level.offset * -1) + 250 <= level.maxLength - 250 )
+					//if(level.offset >= 250 - level.maxLength)
+					//{
 						level.offset -= player.speed;
+					//}
 				}
 			}
-		}
-	}
+			//else if(level.offset - player.speed >= 250 - level.maxLength)
+			//{
+			//	level.offset -= player.speed;
+			//}
+		}*/
+	//}
 }
 
 // Keypresses

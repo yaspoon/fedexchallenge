@@ -2,6 +2,10 @@
 function player()
 {
     //player attributes
+	this.maxHP = 200;
+	this.hp = 30;
+	this.armor = 40;
+	
     this.x = 100;
     this.y = 100;
     this.height = 95;
@@ -155,16 +159,32 @@ function player()
 		}
 		if(!hitYT)
 			this.y += level.gravity;
-		if(hitYB)
-		{
-			alert("yolo");
-			this.y += level.gravity;
-		}
+		
 		if(!this.hitX)
 		{
 			if((this.x + this.facing*this.speed >= 0) && (this.x + this.width + this.facing*this.speed <= 800))
 			{
-				this.x += this.facing*this.speed;
+				if(this.x + (this.facing*this.speed) > 250)
+				{
+					level.offset -= (this.speed*this.facing);
+				}
+				else if(this.spriteFacing == -1 && this.x + (this.facing*this.speed) <= 250)
+				{
+					if(level.offset + this.speed <= 0)
+					{
+						level.offset += this.speed;
+							//if(this.x + (this.facing*this.speed) <= 250 && level.offset == 0)
+								//this.x += this.facing*this.speed;
+					}
+					else
+					{
+						this.x += this.facing*this.speed;
+					}
+				}
+				else
+				{
+					this.x += this.facing*this.speed;
+				}
 			}
 		}
         if(this.spriteFacing == 1)
@@ -175,6 +195,25 @@ function player()
         {
             ctx.drawImage(this.spriteLeft[this.currentSprite], this.x, this.y, this.width, this.height);
         }
+		
+		// Draw Health Bar
+		ctx.fillStyle = "#000000";
+		ctx.strokeRect(this.x, this.y - 15, this.width, 10);
+		if((this.hp/this.maxHP) > 0.5)
+		{
+			ctx.fillStyle = "#00FF00";
+			ctx.fillRect(this.x + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
+		}
+		else if((this.hp/this.maxHP) > 0.2)
+		{
+			ctx.fillStyle = "#FF9900";
+			ctx.fillRect(this.x + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
+		}
+		else
+		{
+			ctx.fillStyle = "#FF0000";
+			ctx.fillRect(this.x + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
+		}
 	}
 
 	this.jump = jump;

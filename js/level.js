@@ -1,6 +1,6 @@
 function level()
 {
-	this.maxLength = 1200;
+	this.maxLength = 1800;
 	this.blocks = [[0, 400, 2000, 50],[350, 269, 100, 50],[10, 320, 50, 50],[100, 200, 100, 50]];
 	this.gravity = 5;
 	this.type = 'level';
