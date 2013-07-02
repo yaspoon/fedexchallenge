@@ -4,6 +4,7 @@ function enemy(xpos, ypos)
 	this.hp = 150;
 	this.armor = 20;
 	//this.weapon = new weapon();
+	this.type = 'enemy';
 	
 	this.x = xpos;
 	this.y = ypos;
