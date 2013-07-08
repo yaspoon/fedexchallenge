@@ -64,38 +64,6 @@ function player()
 	{
 		var ctx = canvas.getContext('2d');
 		
-		/*
-		if(!hitYT)
-			this.y += level.gravity;
-		
-		if(!this.hitX)
-		{
-			if((this.x + this.facing*this.speed >= 0) && (this.x + this.width + this.facing*this.speed <= 800))
-			{
-				if(this.x + (this.facing*this.speed) > 250)
-				{
-					level.offset -= (this.speed*this.facing);
-				}
-				else if(this.spriteFacing == -1 && this.x + (this.facing*this.speed) <= 250)
-				{
-					if(level.offset + this.speed <= 0)
-					{
-						level.offset += this.speed;
-							//if(this.x + (this.facing*this.speed) <= 250 && level.offset == 0)
-								//this.x += this.facing*this.speed;
-					}
-					else
-					{
-						this.x += this.facing*this.speed;
-					}
-				}
-				else
-				{
-					this.x += this.facing*this.speed;
-				}
-			}
-		}
-		*/
         if(this.spriteFacing == 1)
         {
             ctx.drawImage(this.spriteRight[this.currentSprite], this.x, this.y, this.width, this.height);
