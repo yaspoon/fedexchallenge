@@ -7,16 +7,19 @@ function gameDrawFrame()
 {
 	//document.getElementById("blah").value = "playerX: " + (player.x + player.width) + ", hitX: " + player.hitX;
 	//document.getElementById("blah").value = "HP: " + badguys[0].hp + ", x: " + badguys[0].x + ", y: " + badguys[0].y;
+	player.move(level);
+	player.checkCollisions(level);
     player.animate();
 	level.animate();
 	scrolling();
 	level.drawLevel();
 	player.drawPlayer(level);
+	document.getElementById("blah").value = "x:" + player.x + "y:" + player.y + ", offset: " + level.offset + ", length: " + (level.maxLength - 300) + ", hitX: " + player.hitX;
 }
 
 function scrolling()
 {
-	document.getElementById("blah").value = player.x + ", offset: " + level.offset + ", length: " + (level.maxLength - 300) + ", hitX: " + player.hitX;
+
 	/*if(player.moving)
 	{
 		//if(player.facing == -1)	// Facing Left
@@ -66,18 +69,20 @@ function gamekeydown(e)
 		player.facing = -1;
 		player.spriteFacing = -1
 		player.moving = true;
+		player.speedX = -5;
 	}
 	else if (e.keyCode == '39')	// Right Arrow
 	{
 		player.facing = 1;
 		player.spriteFacing = 1;
 		player.moving = true;
+		player.speedX = 5;
 	}
 	else if (e.keyCode == '38')	// Up Arrow
 	{
 		player.jumpStart();
 	}
-	else if (e.keyCode == '74')
+	else if (e.keyCode == '74') //j
 	{
 		for(var ii = 0; ii < level.badguys.length; ii++)
 		{
@@ -115,6 +120,7 @@ function gamekeyup(e)
         player.moving = false;
         player.currentSprite = 0;
 		player.facing = 0;
+		player.speedX = 0;
 		//player.hitX = false;
 	}
 }
