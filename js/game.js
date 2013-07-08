@@ -13,7 +13,7 @@ function gameDrawFrame()
 	level.animate();
 	level.drawLevel();
 	player.drawPlayer(level);
-	document.getElementById("blah").value = "x:" + player.x + "y:" + player.y + ", offset: " + level.offset + ", length: " + (level.maxLength - 300) + ", hitX: " + player.hitX;
+	document.getElementById("DebugTextBox").value = "x:" + player.x + "y:" + player.y + ", offset: " + level.offset + ", length: " + (level.maxLength - 300) + ", hitX: " + player.hitX;
 }
 
 // Keypresses
