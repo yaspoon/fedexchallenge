@@ -11,53 +11,9 @@ function gameDrawFrame()
 	player.checkCollisions(level);
     player.animate();
 	level.animate();
-	scrolling();
 	level.drawLevel();
 	player.drawPlayer(level);
 	document.getElementById("blah").value = "x:" + player.x + "y:" + player.y + ", offset: " + level.offset + ", length: " + (level.maxLength - 300) + ", hitX: " + player.hitX;
-}
-
-function scrolling()
-{
-
-	/*if(player.moving)
-	{
-		//if(player.facing == -1)	// Facing Left
-		//{
-			if(player.x >= 250 && player.x <= 550)
-			{
-				if(!player.hitX)
-				{
-					if(level.offset >= 250 - level.maxLength)
-					{
-						level.offset -= (player.speed*player.facing);
-						//player.x += player.speed;
-					}
-				}
-			}
-			//else if(level.offset + player.speed <= 0)
-			//{
-			//	level.offset += player.speed;
-			//}
-		/*}
-		else if(player.facing == 1)	// Facing Right
-		{
-			if(player.x >= 250 && player.x + player.speed <= 550)
-			{
-				if(!player.hitX)
-				{
-					//if(level.offset >= 250 - level.maxLength)
-					//{
-						level.offset -= player.speed;
-					//}
-				}
-			}
-			//else if(level.offset - player.speed >= 250 - level.maxLength)
-			//{
-			//	level.offset -= player.speed;
-			//}
-		}*/
-	//}
 }
 
 // Keypresses
