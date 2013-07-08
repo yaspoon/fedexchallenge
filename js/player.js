@@ -9,8 +9,10 @@ function player()
     this.x = 100;
     this.y = 100;
     this.height = 95;
-    this.width = 71;
+    this.width = 66;
     this.speed = 5;
+    this.speedX = 0;
+    this.speedY = 0;
     this.facing = 0;
     this.jumpSpeed = 30;
     this.jumpLimit = 225;
@@ -61,104 +63,8 @@ function player()
 	function drawPlayer(level)
 	{
 		var ctx = canvas.getContext('2d');
-		this.hitX = false;
-		var hitYT = false;
-		var hitYB = false;
-
-		for(var i = 0; i < level.blocks.length; i++)
-		{
-			// Collide Top
-			if(this.y + this.height <= level.getY(i))	// Above Top
-			{
-				if(this.y + this.height + level.gravity >= level.getY(i))	// Going to hit Top
-				{
-					if(this.x + this.width >= level.getX(i))
-					{
-						if(this.x <= level.getX(i) + level.getLength(i))
-						{
-							hitYT = true;
-							this.y = level.getY(i) - this.height;
-							this.jumpCount = 0;
-						}
-					}
-				}
-			}
-
-			// Collide Bottom
-			if(this.y >= level.getY(i) + level.getHeight(i)) // Below Bottom
-			{
-				if(this.jumpCount > 0)
-				{
-					if((level.getY(i) + level.getHeight(i)) - this.y >= this.jumpSpeed)
-					{
-						if(this.x + this.width >= level.getX(i))
-						{
-						//alert("yolo1");
-							if(this.x <= level.getX(i) + level.getLength(i))
-							{
-							//alert("yolo2");
-								//hitYT = true;
-								this.y = level.getY(i) + level.getHeight(i);
-								this.jumpCount = 0;
-								window.clearInterval(this.jumpTimer);
-							}
-						}
-					}
-					if(this.y - this.jumpSpeed <= level.getY(i) + level.getHeight(i))	// About to be above bottom
-					{
-
-						if(this.x + this.width >= level.getX(i))
-						{
-						//alert("yolo1");
-							if(this.x <= level.getX(i) + level.getLength(i))
-							{
-							//alert("yolo2");
-								//hitYT = true;
-								
-								this.y = level.getY(i) + level.getHeight(i);
-								this.jumpCount = 0;
-								window.clearInterval(this.jumpTimer);
-							}
-						}
-					}
-				}
-			}
-			
-			// Left Side Collision
-			if(this.x + this.width <= level.getX(i))	// Left of Object
-			{
-				if(this.x + this.width + this.facing*this.speed >= level.getX(i))
-				{
-					if(this.y >= level.getY(i) || this.y + this.height >= level.getY(i) )
-					{
-						if(this.y <= level.getY(i) + level.getHeight(i) || this.y + this.height >= level.getY(i) + level.getHeight(i))
-						{
-							document.getElementById("blah").value = document.getElementById("blah").value + ", LevelX: " + level.getX(i);
-							this.hitX = true;
-							this.x = level.getX(i) - this.width - 1;
-						}
-					}
-				}
-			}
-
-			// Right Side Collision
-			if(this.x >= level.getX(i) + level.getLength(i))
-			{
-				if(this.x + this.facing*this.speed <= level.getX(i) + level.getLength(i))
-				{
-					if(this.y <= level.getY(i) + level.getHeight(i))
-					{
-						if(this.y + this.height >= level.getY(i))
-						{
-							this.hitX = true;
-							//this.x = level.getX(i) + level.getLength(i) + 0.001;
-						}
-					}
-				}
-			}
-
-			
-		}
+		
+		/*
 		if(!hitYT)
 			this.y += level.gravity;
 		
@@ -189,6 +95,7 @@ function player()
 				}
 			}
 		}
+		*/
         if(this.spriteFacing == 1)
         {
             ctx.drawImage(this.spriteRight[this.currentSprite], this.x, this.y, this.width, this.height);
@@ -216,6 +123,62 @@ function player()
 			ctx.fillStyle = "#FF0000";
 			ctx.fillRect(this.x + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
 		}
+	}
+	
+	this.checkCollisions = checkCollisions
+	function checkCollisions(level)
+	{
+		this.hitX = false;
+		var hitYT = false;
+		var hitYB = false;
+
+		for(var i = 0; i < level.blocks.length; i++)
+		{
+		    //top left corner is inside the other one so push the player down
+		    if( this.y >= level.blocks[i][1] && this.y <= level.blocks[i][1] + level.blocks[i][3] && this.x >= level.blocks[i][0] && this.x <= level.blocks[i][0] + level.blocks[i][2] )
+		    {
+		        this.y = level.blocks[i][1] + level.blocks[i][3];
+		    }
+		    
+		    //bottom left corner is inside the other one so push the player up
+		    if( this.y + this.height > level.blocks[i][1] && this.y + this.height < level.blocks[i][1] + level.blocks[i][3] && this.x >= level.blocks[i][0] && this.x <= level.blocks[i][0] + level.blocks[i][2])
+		    {
+		        this.y = level.blocks[i][1] - this.height;
+		        this.jumpCount = 0;
+		    }
+		    
+		    //top right corner is inside the other one so push the player down
+		    if( this.y >= level.blocks[i][1] && this.y <= level.blocks[i][1] + level.blocks[i][3] && this.x + this.width >= level.blocks[i][0] && this.x + this.width <= level.blocks[i][0] + level.blocks[i][2] )
+		    {
+		        this.y = level.blocks[i][1] + level.blocks[i][3];
+		    }
+		    
+		    //bottom right corner is inside hte other one so push the player up
+		    if( this.y + this.height > level.blocks[i][1] && this.y + this.height < level.blocks[i][1] + level.blocks[i][3] && this.x + this.width >= level.blocks[i][0] && this.x + this.width <= level.blocks[i][0] + level.blocks[i][2])
+		    {
+		        this.y = level.blocks[i][1] - this.height;
+		        this.jumpCount = 0;
+		    }
+		    
+		    //left hand side of player is inside the other one push it to the right
+		    if(this.x >= level.blocks[i][0] && this.x <= level.blocks[i][0] + level.blocks[i][2] && this.y <= level.blocks[i][1] && this.y + this.height >= level.blocks[i][1] + level.blocks[i][3])
+		    {
+		        this.x = level.blocks[i][0] + level.blocks[i][2];
+		    }
+		    
+		    if( this.x + this.width >= level.blocks[i][0] && this.x + this.width <= level.blocks[i][0] + level.blocks[i][2] && this.y <= level.blocks[i][1] && this.y + this.height >= level.blocks[i][1] + level.blocks[i][3])
+		    {
+		        this.x = level.blocks[i][0] - this.width;
+		    }
+		    
+	    }
+	}
+	
+	this.move = move;
+	function move(level)
+	{
+	    this.x += this.speedX;
+	    this.y += level.gravity;
 	}
 
 	this.jump = jump;
