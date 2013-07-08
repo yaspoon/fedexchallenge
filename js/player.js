@@ -1,15 +1,15 @@
 //constructor/class FUCKING JS
 function player()
 {
+    //Dirtiest way to do inheritence. Set a local variable to the parents constructor function then call it to make it our parent BLERG
+    //Stupid "Prototype-based" OO programming
+    this.parent = CollisionBlock;
+    this.parent(100, 100, 66, 95);
     //player attributes
 	this.maxHP = 200;
 	this.hp = 30;
 	this.armor = 40;
 	
-    this.x = 100;
-    this.y = 100;
-    this.height = 95;
-    this.width = 66;
     this.speed = 5;
     this.speedX = 0;
     this.speedY = 0;
@@ -134,29 +134,112 @@ function player()
 
 		for(var i = 0; i < level.blocks.length; i++)
 		{
-		    //top left corner is inside the other one so push the player down
+		    //top left corner is inside the other one so push the player which ever direction is smallest
 		    if( this.y >= level.blocks[i][1] && this.y <= level.blocks[i][1] + level.blocks[i][3] && this.x >= level.blocks[i][0] && this.x <= level.blocks[i][0] + level.blocks[i][2] )
 		    {
-		        this.y = level.blocks[i][1] + level.blocks[i][3];
+		        var changeY = Math.abs(level.blocks[i][1] + level.blocks[i][3] - this.y);
+ 		        var changeX = Math.abs(level.blocks[i][0] - (this.x + this.width));
+		        var rightChangeX = Math.abs(level.blocks[i][0] + level.blocks[i][2] - this.x);
+		        
+		        //It's a smaller move if we push the player down
+		        if((changeY <= changeX) && (changeY <= rightChangeX))
+		        {
+		            this.y = level.blocks[i][1] + level.blocks[i][3];
+		        }
+		        else if((changeX <= changeY) && (changeX <= rightChangeX))
+		        {
+		            this.x = level.blocks[i][0] - this.width;
+		        }
+		        else if((rightChangeX <= changeX) && (rightChangeX <= changeY))
+		        {
+		            this.x = level.blocks[i][0] + level.blocks[i][2];
+		        }
+		        else
+		        {
+		            alert("Can't figure out how to push player out of collision changeX:" + changeX + " rightChangeX:" + rightChangeX + " changeY:" + changeY);
+		        }
 		    }
 		    
 		    //bottom left corner is inside the other one so push the player up
 		    if( this.y + this.height > level.blocks[i][1] && this.y + this.height < level.blocks[i][1] + level.blocks[i][3] && this.x >= level.blocks[i][0] && this.x <= level.blocks[i][0] + level.blocks[i][2])
 		    {
-		        this.y = level.blocks[i][1] - this.height;
+		        var changeY = Math.abs(level.blocks[i][1] - (this.y + this.height));
+ 		        var changeX = Math.abs(level.blocks[i][0] - (this.x + this.width));
+		        var rightChangeX = Math.abs(level.blocks[i][0] + level.blocks[i][2] - this.x);
+		        
+		        //It's a smaller move if we push the player down
+		        if((changeY <= changeX) && (changeY <= rightChangeX))
+		        {
+		            this.y = level.blocks[i][1] - this.height;
+		        }
+		        else if((changeX <= changeY) && (changeX <= rightChangeX))
+		        {
+		            this.x = level.blocks[i][0] - this.width;
+		        }
+		        else if((rightChangeX <= changeX) && (rightChangeX <= changeY))
+		        {
+		            this.x = level.blocks[i][0] + level.blocks[i][2];
+		        }
+		        else
+		        {
+		            alert("Can't figure out how to push player out of collision changeX:" + changeX + " rightChangeX:" + rightChangeX + " changeY:" + changeY);
+		        }
+		        
 		        this.jumpCount = 0;
 		    }
 		    
 		    //top right corner is inside the other one so push the player down
 		    if( this.y >= level.blocks[i][1] && this.y <= level.blocks[i][1] + level.blocks[i][3] && this.x + this.width >= level.blocks[i][0] && this.x + this.width <= level.blocks[i][0] + level.blocks[i][2] )
 		    {
-		        this.y = level.blocks[i][1] + level.blocks[i][3];
+		        var changeY = Math.abs(level.blocks[i][1] + level.blocks[i][3] - this.y);
+ 		        var changeX = Math.abs(level.blocks[i][0] - (this.x + this.width));
+		        var rightChangeX = Math.abs(level.blocks[i][0] + level.blocks[i][2] - this.x);
+		        
+		        //It's a smaller move if we push the player down
+		        if((changeY <= changeX) && (changeY <= rightChangeX))
+		        {
+		            this.y = level.blocks[i][1] + level.blocks[i][3];
+		        }
+		        else if((changeX <= changeY) && (changeX <= rightChangeX))
+		        {
+		            this.x = level.blocks[i][0] - this.width;
+		        }
+		        else if((rightChangeX <= changeX) && (rightChangeX <= changeY))
+		        {
+		            this.x = level.blocks[i][0] + level.blocks[i][2];
+		        }
+		        else
+		        {
+		            alert("Can't figure out how to push player out of collision changeX:" + changeX + " rightChangeX:" + rightChangeX + " changeY:" + changeY);
+		        }
+		        
 		    }
 		    
 		    //bottom right corner is inside hte other one so push the player up
 		    if( this.y + this.height > level.blocks[i][1] && this.y + this.height < level.blocks[i][1] + level.blocks[i][3] && this.x + this.width >= level.blocks[i][0] && this.x + this.width <= level.blocks[i][0] + level.blocks[i][2])
 		    {
-		        this.y = level.blocks[i][1] - this.height;
+		        var changeY = Math.abs(level.blocks[i][1] - (this.y + this.height));
+ 		        var changeX = Math.abs(level.blocks[i][0] - (this.x + this.width));
+		        var rightChangeX = Math.abs(level.blocks[i][0] + level.blocks[i][2] - this.x);
+		        
+		        //It's a smaller move if we push the player down
+		        if((changeY <= changeX) && (changeY <= rightChangeX))
+		        {
+		            this.y = level.blocks[i][1] - this.height;
+		        }
+		        else if((changeX <= changeY) && (changeX <= rightChangeX))
+		        {
+		            this.x = level.blocks[i][0] - this.width;
+		        }
+		        else if((rightChangeX <= changeX) && (rightChangeX <= changeY))
+		        {
+		            this.x = level.blocks[i][0] + level.blocks[i][2];
+		        }
+		        else
+		        {
+		            alert("Can't figure out how to push player out of collision changeX:" + changeX + " rightChangeX:" + rightChangeX + " changeY:" + changeY);
+		        }		    
+		        
 		        this.jumpCount = 0;
 		    }
 		    
