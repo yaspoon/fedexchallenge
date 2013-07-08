@@ -1,7 +1,8 @@
 function level()
 {
 	this.maxLength = 1800;
-	this.blocks = [[350, 324, 70, 76],[0, 400, 2000, 1],[10, 320, 50, 1],[100, 200, 100, 1]];
+	//this.blocks = [[350, 324, 70, 76],[0, 400, 2000, 20],[10, 320, 50, 50],[100, 200, 100, 50]];
+	this.blocks = [[0,400,2000,20],[100,200,100,50]];
 	this.gravity = 5;
 	this.type = 'level';
 	this.offset = 0;		// X offset used fot scrolling the map
