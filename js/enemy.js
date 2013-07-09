@@ -134,7 +134,7 @@ function enemy(xpos, ypos)
 					{
 						if(this.y <= level.getY(i) + level.getHeight(i) || this.y + this.height >= level.getY(i) + level.getHeight(i))
 						{
-							document.getElementById("blah").value = document.getElementById("blah").value + ", LevelX: " + level.getX(i);
+							document.getElementById("DebugTextBox").value = document.getElementById("DebugTextBox").value + ", LevelX: " + level.getX(i);
 							this.hitX = true;
 							this.x = level.getX(i) - this.width - 1;
 						}
