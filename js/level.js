@@ -2,7 +2,8 @@ function level()
 {
 	this.maxLength = 1800;
 	//this.blocks = [[350, 324, 70, 76],[0, 400, 2000, 20],[10, 320, 50, 50],[100, 200, 100, 50]];
-	this.blocks = [[0,400,2000,20],[100,200,100,50]];
+	//this.blocks = [[0,400,2000,20],[100,200,100,50]];
+	this.blocks = new Array();
 	this.gravity = 5;
 	this.type = 'level';
 	this.offset = 0;		// X offset used fot scrolling the map
@@ -15,6 +16,9 @@ function level()
 	
 	this.badguys = new Array();
 	this.badguys[0] = new enemy(600,100);
+	
+	this.blocks[0] = new GameBlock(0, 400, 2000, 20, false);
+	this.blocks[1] = new GameBlock(100, 200, 100, 50, false);
 	
 	this.animate = animate;
 	function animate()
@@ -36,10 +40,9 @@ function level()
 		
 		ctx.drawImage(this.images[0], this.getX(0), this.getY(0), this.getLength(0), this.getHeight(0));
 		
-		ctx.fillStyle='#FF0000';
-		for(var i = 1; i < this.blocks.length; i++)
+		for(var i = 0; i < this.blocks.length; i++)
 		{
-			ctx.fillRect(this.blocks[i][0] + this.offset, this.blocks[i][1], this.blocks[i][2], this.blocks[i][3]);
+			this.blocks[i].draw();
 		}
 		
 		for(var i = 0; i < this.badguys.length; i++)
