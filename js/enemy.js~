@@ -1,24 +1,25 @@
-//constructor/class FUCKING JS
-function player()
+function enemy(xpos, ypos)
 {
-    //Dirtiest way to do inheritence. Set a local variable to the parents constructor function then call it to make it our parent BLERG
-    //Stupid "Prototype-based" OO programming
     this.parent = Moveable;
-    this.parent(100, 100, 66, 95);
-    //player attributes
+    this.parent(xpos, ypos, 71, 95);
 	this.maxHP = 200;
-	this.hp = 30;
-	this.armor = 40;
+	this.hp = 150;
+	this.armor = 20;
+	//this.weapon = new weapon();
+	this.type = 'enemy';
 	
+	//this.x = xpos;
+	//this.y = ypos;
+	//this.height = 95;
+    //this.width = 71;
     this.speed = 5;
     this.facing = 0;
-    this.jumpSpeed = 30;
+    this.jumpSpeed = 15;
     this.jumpLimit = 225;
-    this.weapon = new weapon("Aragorn's Sword");
-    this.combatRange = weapon.length;
 
     this.moving = false;
 	this.hitX = false;
+	this.offset;
 
     this.frameCount = 0
 
@@ -55,41 +56,8 @@ function player()
 	this.jumpTimer;
 	this.jumpCount = 0;
 	this.moveTimer;
-
-    //player functions
-	this.drawPlayer = drawPlayer;
-	function drawPlayer(level)
-	{
-		var ctx = canvas.getContext('2d');
-		
-        if(this.spriteFacing == 1)
-        {
-            ctx.drawImage(this.spriteRight[this.currentSprite], this.x, this.y, this.width, this.height);
-        }
-        else
-        {
-            ctx.drawImage(this.spriteLeft[this.currentSprite], this.x, this.y, this.width, this.height);
-        }
-		
-		// Draw Health Bar
-		ctx.fillStyle = "#000000";
-		ctx.strokeRect(this.x, this.y - 15, this.width, 10);
-		if((this.hp/this.maxHP) > 0.5)
-		{
-			ctx.fillStyle = "#00FF00";
-			ctx.fillRect(this.x + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
-		}
-		else if((this.hp/this.maxHP) > 0.2)
-		{
-			ctx.fillStyle = "#FF9900";
-			ctx.fillRect(this.x + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
-		}
-		else
-		{
-			ctx.fillStyle = "#FF0000";
-			ctx.fillRect(this.x + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
-		}
-	}
+	this.aiTimer;
+	this.aiON = false;
 	
 	this.move = move;
 	function move(level)
@@ -98,7 +66,42 @@ function player()
 	    this.y += this.speedY;
 	    this.y += level.gravity;
 	}
+	
+	this.drawEnemy = drawEnemy;
+	function drawEnemy(offsetX, offsetY)
+	{
 
+		var ctx = canvas.getContext('2d');
+		
+        if(this.spriteFacing == 1)
+        {
+            ctx.drawImage(this.spriteRight[this.currentSprite], this.x + offsetX, this.y + offsetY, this.width, this.height);
+        }
+        else
+        {
+            ctx.drawImage(this.spriteLeft[this.currentSprite], this.x + offsetX, this.y + offsetY, this.width, this.height);
+        }
+		
+		// Draw Health Bar
+		ctx.fillStyle = "#000000";
+		ctx.strokeRect(this.x + offsetX, this.y - 15, this.width, 10);
+		if((this.hp/this.maxHP) > 0.5)
+		{
+			ctx.fillStyle = "#00FF00";
+			ctx.fillRect(this.x + offsetX + 1, this.y + offsetY - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
+		}
+		else if((this.hp/this.maxHP) > 0.2)
+		{
+			ctx.fillStyle = "#FF9900";
+			ctx.fillRect(this.getX() + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
+		}
+		else
+		{
+			ctx.fillStyle = "#FF0000";
+			ctx.fillRect(this.getX() + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
+		}
+	}
+	
 	this.jump = jump;
 	function jump()
 	{
@@ -107,7 +110,7 @@ function player()
 		if(this.jumpCount*this.jumpSpeed > this.jumpLimit)
 		{
 			window.clearInterval(this.jumpTimer);
-			jumpCount = 0;
+			this.jumpCount = -1;
 		}
 		else
 		{
@@ -118,29 +121,15 @@ function player()
 	this.jumpStart = jumpStart
 	function jumpStart()
 	{
-	    var tmp = {x:this.x + 1, y:this.y + this.height, width: this.width - 2, height: 5, moveable:true};
-	    var onGround = false;
-	    
-	    for( var i = 0; i < objects.length; i++)
-	    {
-	        if(objects[i] != this)
-	        {
-    	        if(detectCollision( tmp, objects[i]))
-	            {
-	                onGround = true;
-	            }
-	        }
-	    }
-	    
-		if(onGround)
+		if (this.jumpCount == 0)
 		{
 			this.jumpCount = 1;
 			var self = this;
 			this.jumpTimer = setInterval(function() {self.jump();}, 30);
 		}
 	}
-
-    this.animate = animate
+	
+	this.animate = animate
 	function animate()
 	{
         this.frameCount = this.frameCount + 1;
@@ -154,5 +143,68 @@ function player()
                 this.currentSprite = this.currentSprite % 5;
             }
         }
+	}
+	
+	this.intelligence = intelligence;
+	function intelligence(player)
+	{
+		this.aiON = true;
+		var ran = Math.floor(Math.random()*1000) + 1000;	// time allowed to move for
+		var ran2 = Math.floor(Math.random()*5);
+		if(ran2 == 0)	// Walk left
+		{
+			this.speedX = -5;
+			this.spriteFacing = -1;
+			this.startWalking();
+		}
+		else if(ran2 == 1)
+		{
+			this.speedX = 5;
+			this.spriteFacing = 1;
+			this.startWalking();
+		}
+		else if(ran2 == 2) // Jump
+		{
+			this.jumpStart();
+		}
+		else
+		{
+			this.moving = false;
+			this.currentSprite = 0;
+			this.speedX = 0;
+		}
+		//window.clearInterval(this.moveTimer);
+		var self = this;
+		//this.moveTimer = setInterval(function() {self.stopWalking;}, ran);
+		window.clearInterval(this.aiTimer);
+		this.aiTimer = setInterval(function() {self.intelligence();}, ran);
+	}
+	
+	this.stopJump = stopJump;
+	function stopJump()
+	{
+		this.jumpCount = -1;
+		this.currentSprite = 0;
+		window.clearInterval(this.jumpTimer);
+	}
+	
+	this.startWalking = startWalking;
+	function startWalking()
+	{
+		this.moving = true;
+	}
+
+	this.stopWalking = stopWalking;
+	function stopWalking()
+	{
+		this.moving = false;
+        this.currentSprite = 0;
+		this.facing = 0;
+	}
+	
+	this.getX = getX;
+	function getX()
+	{
+		return this.x + this.offset;
 	}
 }

@@ -23,7 +23,7 @@ function GameBlock(x, y, width, height, sprite)
         
         if(!(this.sprite == "undefined"))
         {
-            ctx.drawImage(this.sprite, this.x + offsetX, this.y + offsetY, this.width, this.height);
+            ctx.drawImage(this.sprite, this.x, this.y, this.width, this.height);
         }
         else
         {    	

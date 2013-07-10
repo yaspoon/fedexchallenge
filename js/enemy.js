@@ -1,15 +1,17 @@
 function enemy(xpos, ypos)
 {
+    this.parent = Moveable;
+    this.parent(xpos, ypos, 71, 95);
 	this.maxHP = 200;
 	this.hp = 150;
 	this.armor = 20;
 	//this.weapon = new weapon();
 	this.type = 'enemy';
 	
-	this.x = xpos;
-	this.y = ypos;
-	this.height = 95;
-    this.width = 71;
+	//this.x = xpos;
+	//this.y = ypos;
+	//this.height = 95;
+    //this.width = 71;
     this.speed = 5;
     this.facing = 0;
     this.jumpSpeed = 15;
@@ -57,135 +59,36 @@ function enemy(xpos, ypos)
 	this.aiTimer;
 	this.aiON = false;
 	
-	this.drawEnemy = drawEnemy;
-	function drawEnemy(level)
+	this.move = move;
+	function move(level)
 	{
-		this.offset = level.offset;
+	    this.x += this.speedX;
+	    this.y += this.speedY;
+	    this.y += level.gravity;
+	}
+	
+	this.drawEnemy = drawEnemy;
+	function drawEnemy(offsetX, offsetY)
+	{
+
 		var ctx = canvas.getContext('2d');
-		this.hitX = false;
-		var hitYT = false;
-		var hitYB = false;
-
-		for(var i = 0; i < level.blocks.length; i++)
-		{
-			// Collide Top
-			if(this.y + this.height <= level.getY(i))	// Above Top
-			{
-				if(this.y + this.height + level.gravity >= level.getY(i))	// Going to hit Top
-				{
-					if(this.getX() + this.width >= level.getX(i))
-					{
-						if(this.getX() <= level.getX(i) + level.getLength(i))
-						{
-							hitYT = true;
-							this.y = level.getY(i) - this.height;
-							this.jumpCount = 0;
-						}
-					}
-				}
-			}
-
-			// Collide Bottom
-			if(this.y >= level.getY(i) + level.getHeight(i)) // Below Bottom
-			{
-				if(this.jumpCount > 0)
-				{
-					if((level.getY(i) + level.getHeight(i)) - this.y >= this.jumpSpeed)
-					{
-						if(this.getX() + this.width >= level.getX(i))
-						{
-						//alert("yolo1");
-							if(this.getX() <= level.getX(i) + level.getLength(i))
-							{
-							//alert("yolo2");
-								//hitYT = true;
-								this.y = level.getY(i) + level.getHeight(i);
-								this.jumpCount = 0;
-								window.clearInterval(this.jumpTimer);
-							}
-						}
-					}
-					if(this.y - this.jumpSpeed <= level.getY(i) + level.getHeight(i))	// About to be above bottom
-					{
-
-						if(this.getX() + this.width >= level.getX(i))
-						{
-						//alert("yolo1");
-							if(this.getX() <= level.getX(i) + level.getLength(i))
-							{
-							//alert("yolo2");
-								//hitYT = true;
-								
-								this.y = level.getY(i) + level.getHeight(i);
-								this.jumpCount = 0;
-								window.clearInterval(this.jumpTimer);
-							}
-						}
-					}
-				}
-			}
-			
-			// Left Side Collision
-			if(this.getX() + this.width <= level.getX(i))	// Left of Object
-			{
-				if(this.getX() + this.width + this.facing*this.speed >= level.getX(i))
-				{
-					if(this.y >= level.getY(i) || this.y + this.height >= level.getY(i) )
-					{
-						if(this.y <= level.getY(i) + level.getHeight(i) || this.y + this.height >= level.getY(i) + level.getHeight(i))
-						{
-							document.getElementById("DebugTextBox").value = document.getElementById("DebugTextBox").value + ", LevelX: " + level.getX(i);
-							this.hitX = true;
-							this.x = level.getX(i) - this.width - 1;
-						}
-					}
-				}
-			}
-
-			// Right Side Collision
-			if(this.getX() >= level.getX(i) + level.getLength(i))
-			{
-				if(this.getX() + this.facing*this.speed <= level.getX(i) + level.getLength(i))
-				{
-					if(this.y <= level.getY(i) + level.getHeight(i))
-					{
-						if(this.y + this.height >= level.getY(i))
-						{
-							this.hitX = true;
-							//this.getX() = level.getX(i) + level.getLength(i) + 0.001;
-						}
-					}
-				}
-			}
-
-			
-		}
-		if(!hitYT)
-			this.y += level.gravity;
 		
-		if(!this.hitX)
-		{
-			if((this.x + this.facing*this.speed >= 0) && (this.x + this.width + this.facing*this.speed <= level.maxLength))
-			{
-				this.x += this.facing*this.speed;
-			}
-		}
         if(this.spriteFacing == 1)
         {
-            ctx.drawImage(this.spriteRight[this.currentSprite], this.getX(), this.y, this.width, this.height);
+            ctx.drawImage(this.spriteRight[this.currentSprite], this.x + offsetX, this.y + offsetY, this.width, this.height);
         }
         else
         {
-            ctx.drawImage(this.spriteLeft[this.currentSprite], this.getX(), this.y, this.width, this.height);
+            ctx.drawImage(this.spriteLeft[this.currentSprite], this.x + offsetX, this.y + offsetY, this.width, this.height);
         }
 		
 		// Draw Health Bar
 		ctx.fillStyle = "#000000";
-		ctx.strokeRect(this.getX(), this.y - 15, this.width, 10);
+		ctx.strokeRect(this.x + offsetX, this.y + offsetY - 15, this.width, 10);
 		if((this.hp/this.maxHP) > 0.5)
 		{
 			ctx.fillStyle = "#00FF00";
-			ctx.fillRect(this.getX() + 1, this.y - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
+			ctx.fillRect(this.x + offsetX + 1, this.y + offsetY - 14, (this.width*(this.hp/this.maxHP)) - 2, 8);
 		}
 		else if((this.hp/this.maxHP) > 0.2)
 		{
@@ -250,13 +153,13 @@ function enemy(xpos, ypos)
 		var ran2 = Math.floor(Math.random()*5);
 		if(ran2 == 0)	// Walk left
 		{
-			this.facing = -1;
+			this.speedX = -5;
 			this.spriteFacing = -1;
 			this.startWalking();
 		}
 		else if(ran2 == 1)
 		{
-			this.facing = 1;
+			this.speedX = 5;
 			this.spriteFacing = 1;
 			this.startWalking();
 		}
@@ -268,7 +171,7 @@ function enemy(xpos, ypos)
 		{
 			this.moving = false;
 			this.currentSprite = 0;
-			this.facing = 0;
+			this.speedX = 0;
 		}
 		//window.clearInterval(this.moveTimer);
 		var self = this;

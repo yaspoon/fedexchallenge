@@ -1,4 +1,4 @@
-function CollisionBlock(inX, inY, inWidth, inHeight, inMoveable)
+function CollisionBlock(inX, inY, inWidth, inHeight)
 {
     var x = 0;
     var y = 0;
@@ -40,15 +40,6 @@ function CollisionBlock(inX, inY, inWidth, inHeight, inMoveable)
     else
     {
         alert("height is undefined wtf");
-    }
-    
-    if( !(inMoveable === undefined) )
-    {
-        this.moveable = inMoveable;
-    }
-    else
-    {
-        alert("moveable is undefined wtf");
     }
      
     addNewObject(this);
